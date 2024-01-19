@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const axios = require('axios');
 const cors = require('cors'); 
+const dayjs = require('dayjs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -90,15 +91,24 @@ app.get('/api/transactions', async (req, res) => {
 app.get('/api/statistics', async (req, res) => {
     const { month } = req.query;
     const filter = {};
+    console.log("starts called")
+
   
     if (month) {
-      const startDate = new Date(`${month} 01`);
+      const year = new Date(`2023-${month}-01`).getMonth() >= 8 ? 2021 : 2022;
+
+      const startDate = new Date(`${year}-${month}-01`);
       const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
-  
+
       filter.dateOfSale = {
-        $gte: startDate,
-        $lt: endDate,
+        $gte: dayjs(startDate).format(),
+        $lt: dayjs(endDate).format(),
       };
+
+      2021-9 
+      2022-8
+
+      console.log("filters", filter)
     }
   
     try {

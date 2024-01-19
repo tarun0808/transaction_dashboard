@@ -14,11 +14,11 @@ const TransactionsTable = () => {
   const [statistics, setStatistics] = useState({});
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const [barChartData, setBarChartData] = useState([]);
-
+  
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const response = await axios.get(`/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${selectedMonth}`);
+        const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${selectedMonth}`);
         setTransactions(response.data.transactions);
         setTotalCount(response.data.total_count);
       } catch (error) {
@@ -28,7 +28,7 @@ const TransactionsTable = () => {
 
       const fetchBarChartData = async () => {
         try {
-          const response = await axios.get(`/api/bar-chart?month=${selectedMonth}`);
+          const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/bar-chart?month=${selectedMonth}`);
           setBarChartData(response.data);
           renderBarChart();
         } catch (error) {
@@ -38,7 +38,7 @@ const TransactionsTable = () => {
 
     const fetchStatistics = async () => {
       try {
-        const response = await axios.get(`/api/statistics?month=${selectedMonth}`);
+        const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/statistics?month=${selectedMonth}`);
         setStatistics(response.data);
       } catch (error) {
         console.error(error);
@@ -75,7 +75,7 @@ const TransactionsTable = () => {
     const newMonth = event.target.value;
     setSelectedMonth(newMonth);
     try {
-      const response = await axios.get(`/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${newMonth}`);
+      const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${newMonth}`);
       setTransactions(response.data.transactions);
       setTotalCount(response.data.total_count);
     } catch (error) {
@@ -85,7 +85,7 @@ const TransactionsTable = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${selectedMonth}`);
+      const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${selectedMonth}`);
       setTransactions(response.data.transactions);
       setTotalCount(response.data.total_count);
     } catch (error) {
@@ -96,7 +96,7 @@ const TransactionsTable = () => {
   const handleClearSearch = async () => {
     setSearch('');
     try {
-      const response = await axios.get(`/api/transactions?page=${page}&per_page=${perPage}&search=&month=${selectedMonth}`);
+      const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/transactions?page=${page}&per_page=${perPage}&search=&month=${selectedMonth}`);
       setTransactions(response.data.transactions);
       setTotalCount(response.data.total_count);
     } catch (error) {
