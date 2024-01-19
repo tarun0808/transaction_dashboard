@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
+
+
 const columns = [
   { field: 'title', headerName: 'Title', width: 250},
   { field: 'description', headerName: 'Description', width: 350 },
@@ -38,6 +40,7 @@ const columns = [
 
 export default function DataTable({data}) {
   return (
+    <Container>
       <DataGrid
         rows={data}
         getRowId={(data) => data._id}
@@ -48,5 +51,6 @@ export default function DataTable({data}) {
           },
         }}
       />
+      </Container>
   );
 }

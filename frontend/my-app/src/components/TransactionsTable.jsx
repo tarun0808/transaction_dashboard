@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
 import DataTable from './table';
+import { Container } from '@mui/material';
 
 const TransactionsTable = () => {
   const [transactions, setTransactions] = useState([]);
@@ -57,7 +58,7 @@ const TransactionsTable = () => {
     fetchTransactions();
     fetchStatistics();
   }, [page, perPage, search, selectedMonth]);
-
+  
   const renderBarChart = (barChartData) => {
     if (currentChart){
       currentChart.destroy()
@@ -107,6 +108,7 @@ const TransactionsTable = () => {
         ],
       },
     });
+   
 
     setCurrentPieChart(myChart)
   };
@@ -156,8 +158,11 @@ const TransactionsTable = () => {
   };
 
   return (
+    <Container >
     <div>
+      <div>
       <h1>Transactions Table</h1>
+      </div>
       <div>
         <label>Select Month:</label>
         <select value={selectedMonth} onChange={handleMonthChange}>
@@ -168,34 +173,43 @@ const TransactionsTable = () => {
           ))}
         </select>
       </div>
-      <div>
+      <div >
         <label>Search Transactions:</label>
         <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
         <button onClick={handleSearch}>Search</button>
         <button onClick={handleClearSearch}>Clear Search</button>
       </div>
       <div>
+        <Container sx={{width: "auto", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", margin: "10px"}}>
         <div>
           <h2>Transactions Statistics</h2>
           <p>Total Sale Amount: {statistics.totalSaleAmount}</p>
           <p>Total Sold Items: {statistics.totalSoldItems}</p>
           <p>Total Not Sold Items: {statistics.totalNotSoldItems}</p>
         </div>
+        </Container>
         <DataTable data={transactions}/>
         <p>Total Count: {totalCount}</p>
         <button onClick={handlePreviousPage}>Previous</button>
         <button onClick={handleNextPage}>Next</button>
       </div>
-
+      <Container>
+        
       <div>
         <h2>Transactions Bar Chart</h2>
         <canvas id="barChart" width="400" height="200"></canvas>
       </div>
+      
+      <Container sx={{width: "auto", height: "100%", display: "flex", justifyContent: "left", alignItems: "left", margin: "10px"}}>
       <div>
         <h2>Transactions Pie Chart</h2>
         <canvas id="pieChart" width="400" height="200"></canvas>
       </div>
+      </Container>
+      </Container>
+      
     </div>
+    </Container>
   );
 };
 
