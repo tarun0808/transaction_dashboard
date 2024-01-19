@@ -20,7 +20,17 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 mongoose.connect('mongodb+srv://tarunranjan0808:tarun0808@cluster0.ji82n7q.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
+function getMonthFilter(month){
+  const year = new Date(`2023-${month}-01`).getMonth() >= 8 ? 2021 : 2022;
+  const startDate = new Date(`${year}-${month}-01`);
+  const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
 
+  return {
+    $gte: dayjs(startDate).format(),
+    $lt: dayjs(endDate).format(),
+  };
+
+}
 const transactionSchema = new mongoose.Schema({
   title: String,
   description: String,
@@ -57,13 +67,7 @@ app.get('/api/transactions', async (req, res) => {
     const filter = {};
   
     if (month) {
-      const startDate = new Date(`${month} 01`);
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
-  
-      filter.dateOfSale = {
-        $gte: startDate,
-        $lt: endDate,
-      };
+      filter.dateOfSale = getMonthFilter(month)
     }
   
     if (search) {
@@ -95,20 +99,7 @@ app.get('/api/statistics', async (req, res) => {
 
   
     if (month) {
-      const year = new Date(`2023-${month}-01`).getMonth() >= 8 ? 2021 : 2022;
-
-      const startDate = new Date(`${year}-${month}-01`);
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
-
-      filter.dateOfSale = {
-        $gte: dayjs(startDate).format(),
-        $lt: dayjs(endDate).format(),
-      };
-
-      2021-9 
-      2022-8
-
-      console.log("filters", filter)
+      filter.dateOfSale = getMonthFilter(month)
     }
   
     try {
@@ -138,13 +129,7 @@ app.get('/api/bar-chart', async (req, res) => {
     const filter = {};
   
     if (month) {
-      const startDate = new Date(`${month} 01`);
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
-  
-      filter.dateOfSale = {
-        $gte: startDate,
-        $lt: endDate,
-      };
+      filter.dateOfSale = getMonthFilter(month)
     }
   
     try {
@@ -188,13 +173,7 @@ app.get('/api/pie-chart', async (req, res) => {
     const filter = {};
   
     if (month) {
-      const startDate = new Date(`${month} 01`);
-      const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
-  
-      filter.dateOfSale = {
-        $gte: startDate,
-        $lt: endDate,
-      };
+      filter.dateOfSale = getMonthFilter(month)
     }
   
     try {
