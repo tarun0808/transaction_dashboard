@@ -14,12 +14,20 @@ const TransactionsTable = () => {
   const [statistics, setStatistics] = useState({});
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const [barChartData, setBarChartData] = useState([]);
+  const [currentChart, setCurrentChart] = useState()
+  const [currentPieChart, setCurrentPieChart] = useState()
   
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/transactions?page=${page}&per_page=${perPage}&search=${search}&month=${selectedMonth}`);
         setTransactions(response.data.transactions);
+        
+        if (response.data.transactions){
+          const pieChartData = response.data.transactions.reduce((acc, item) => {return {...acc, [item.category]: (acc[item.category] || 0) + 1} }, {})
+          renderPieChart(pieChartData)
+        }
+      
         setTotalCount(response.data.total_count);
       } catch (error) {
         console.error(error);
@@ -30,7 +38,7 @@ const TransactionsTable = () => {
         try {
           const response = await axios.get(`https://transactiondashboard-production.up.railway.app/api/bar-chart?month=${selectedMonth}`);
           setBarChartData(response.data);
-          renderBarChart();
+          renderBarChart(response.data);
         } catch (error) {
           console.error(error);
         }
@@ -50,10 +58,13 @@ const TransactionsTable = () => {
     fetchStatistics();
   }, [page, perPage, search, selectedMonth]);
 
-  const renderBarChart = () => {
+  const renderBarChart = (barChartData) => {
+    if (currentChart){
+      currentChart.destroy()
+    }
     const ctx = document.getElementById('barChart');
-
-    new Chart(ctx, {
+    
+    const myChart =  new Chart(ctx, {
       type: 'bar',
       data: {
         labels: barChartData.map((data) => data.priceRange),
@@ -68,6 +79,36 @@ const TransactionsTable = () => {
         ],
       },
     });
+
+    setCurrentChart(myChart)
+  };
+  const renderPieChart = (barChartData) => {
+    if (currentPieChart){
+      currentPieChart.destroy()
+    }
+  console.log(
+    barChartData
+  )
+    
+    const ctx = document.getElementById('pieChart');
+    
+    const myChart =  new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(barChartData),
+        datasets: [
+          {
+            label: 'Number of Items',
+            data: Object.values(barChartData),
+            // backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            // borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+    });
+
+    setCurrentPieChart(myChart)
   };
 
 
@@ -174,6 +215,10 @@ const TransactionsTable = () => {
       <div>
         <h2>Transactions Bar Chart</h2>
         <canvas id="barChart" width="400" height="200"></canvas>
+      </div>
+      <div>
+        <h2>Transactions Pie Chart</h2>
+        <canvas id="pieChart" width="400" height="200"></canvas>
       </div>
     </div>
   );
