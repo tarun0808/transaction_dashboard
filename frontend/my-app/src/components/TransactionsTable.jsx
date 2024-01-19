@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Chart from 'chart.js/auto';
-
+import DataTable from './table';
 
 const TransactionsTable = () => {
   const [transactions, setTransactions] = useState([]);
@@ -181,32 +181,7 @@ const TransactionsTable = () => {
           <p>Total Sold Items: {statistics.totalSoldItems}</p>
           <p>Total Not Sold Items: {statistics.totalNotSoldItems}</p>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Price</th>
-              <th>Category</th>
-              <th>Sold</th>
-              <th>Image</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((transaction) => (
-              <tr key={transaction._id}>
-                <td>{transaction._id}</td>
-                <td>{transaction.title}</td>
-                <td>{transaction.description}</td>
-                <td>{transaction.price}</td>
-                <td>{transaction.category}</td>
-                <td>{transaction.sold}</td>
-                <td>{transaction.image}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <DataTable data={transactions}/>
         <p>Total Count: {totalCount}</p>
         <button onClick={handlePreviousPage}>Previous</button>
         <button onClick={handleNextPage}>Next</button>
