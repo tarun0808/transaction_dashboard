@@ -18,7 +18,7 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-mongoose.connect('mongodb://127.0.0.1:27017/product_transaction', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb+srv://tarunranjan0808:tarun0808@cluster0.ji82n7q.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true });
 
 const transactionSchema = new mongoose.Schema({
   title: String,
